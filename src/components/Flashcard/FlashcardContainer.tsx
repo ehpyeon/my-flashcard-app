@@ -18,7 +18,7 @@ interface Situation {
 interface CorrectionWithAnswers extends Correction {
   answer_first?: string;
   answer_full?: string;
-  situations?: Situation | null;
+  situations?: Situation[] | null;
 }
 
 interface RawSupabaseResponse {
@@ -32,7 +32,7 @@ interface RawSupabaseResponse {
   score: number;
   answer_first?: string;
   answer_full?: string;
-  situations: Situation;
+  situations: Situation[];
 }
 
 export function FlashcardContainer() {
@@ -72,18 +72,17 @@ export function FlashcardContainer() {
           )
         `)
         .order('created_at', { ascending: false })
-        .single()
 
       if (error) throw error
 
-      if (!data) {
+      if (!data || !data.length) {
         console.log('No data returned from Supabase')
         return
       }
 
-      const processedData: CorrectionWithAnswers[] = [data].map(item => ({
+      const processedData: CorrectionWithAnswers[] = data.map(item => ({
         id: item.id,
-        situation_id: item.situations?.id ?? '',
+        situation_id: item.situations?.[0]?.id ?? '',
         title: item.title,
         before_sentence: item.before_sentence,
         before_intention: item.before_intention,
