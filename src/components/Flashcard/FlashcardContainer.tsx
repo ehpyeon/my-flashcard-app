@@ -18,7 +18,7 @@ interface Situation {
 interface CorrectionWithAnswers extends Correction {
   answer_first?: string;
   answer_full?: string;
-  situations?: Situation;
+  situations?: Situation | null;
 }
 
 interface SupabaseResponse {
@@ -32,11 +32,7 @@ interface SupabaseResponse {
   score: number;
   answer_first?: string;
   answer_full?: string;
-  situations: {
-    id: string;
-    title: string;
-    type: string;
-  } | null;
+  situations: Situation | null;
 }
 
 export function FlashcardContainer() {
@@ -84,7 +80,7 @@ export function FlashcardContainer() {
         return
       }
 
-      const processedData: CorrectionWithAnswers[] = data.map(item => ({
+      const processedData: CorrectionWithAnswers[] = (data as SupabaseResponse[]).map(item => ({
         id: item.id,
         situation_id: item.situations?.id ?? '',
         title: item.title,
