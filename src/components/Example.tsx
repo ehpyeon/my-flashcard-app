@@ -5,17 +5,18 @@ import { Input } from '@/components/ui/Input'
 
 export function Example() {
   return (
-    <Box className="max-w-md">
-      <Text variant="h2" className="mb-4">
-        제목
+    <Box className="p-4">
+      <Text variant="h1" className="mb-4">
+        예시 컴포넌트
       </Text>
-      <Input
-        value=""
-        onChange={() => {}}
-        placeholder="입력해주세요"
+      <Text variant="body" className="mb-4">
+        이것은 예시 텍스트입니다.
+      </Text>
+      <Input 
+        placeholder="입력해주세요" 
         className="w-full mb-4"
       />
-      <Button variant="primary" onClick={() => console.log('clicked')}>
+      <Button variant="default" onClick={() => console.log('clicked')}>
         버튼
       </Button>
     </Box>
