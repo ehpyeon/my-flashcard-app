@@ -1,4 +1,7 @@
-import { Box, Text, Button, Input } from '@/components/ui'
+import { Box } from '@/components/ui/Box'
+import { Text } from '@/components/ui/Text'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 
 export function Example() {
   return (
