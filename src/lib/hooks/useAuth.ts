@@ -4,9 +4,18 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
+interface AuthState {
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: Error | null;
+}
+
 export function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [state, setState] = useState<AuthState>({
+    isAuthenticated: false,
+    loading: true,
+    error: null
+  });
   const router = useRouter()
   const pathname = usePathname()
 
@@ -14,7 +23,7 @@ export function useAuth() {
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        setIsAuthenticated(!!session)
+        setState(prev => ({ ...prev, isAuthenticated: !!session }))
         
         // 인증이 필요한 페이지에서 로그인 체크
         if (!session && pathname !== '/login') {
@@ -26,16 +35,16 @@ export function useAuth() {
         }
       } catch (error) {
         console.error('Auth error:', error)
-        setIsAuthenticated(false)
+        setState(prev => ({ ...prev, isAuthenticated: false }))
       } finally {
-        setLoading(false)
+        setState(prev => ({ ...prev, loading: false }))
       }
     }
 
     checkAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsAuthenticated(!!session)
+      setState(prev => ({ ...prev, isAuthenticated: !!session }))
       if (event === 'SIGNED_OUT') {
         router.push('/login')
       }
@@ -55,5 +64,5 @@ export function useAuth() {
     }
   }
 
-  return { isAuthenticated, loading, signOut }
+  return { ...state, signOut }
 } 

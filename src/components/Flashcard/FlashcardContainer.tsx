@@ -18,10 +18,10 @@ interface Situation {
 interface CorrectionWithAnswers extends Correction {
   answer_first?: string;
   answer_full?: string;
-  situations?: Situation[] | null;
+  situations?: Situation | null;
 }
 
-interface RawSupabaseResponse {
+interface SupabaseResponse {
   id: string;
   title: string;
   before_sentence: string;
@@ -32,7 +32,7 @@ interface RawSupabaseResponse {
   score: number;
   answer_first?: string;
   answer_full?: string;
-  situations: Situation[];
+  situations: Situation | null;
 }
 
 export function FlashcardContainer() {
@@ -82,7 +82,7 @@ export function FlashcardContainer() {
 
       const processedData: CorrectionWithAnswers[] = data.map(item => ({
         id: item.id,
-        situation_id: item.situations?.[0]?.id ?? '',
+        situation_id: item.situations?.id ?? '',
         title: item.title,
         before_sentence: item.before_sentence,
         before_intention: item.before_intention,
@@ -93,10 +93,10 @@ export function FlashcardContainer() {
         expression: '',
         datelist: item.datelist || [],
         score: item.score || 0,
-        created_at: '',
-        updated_at: '',
-        answer_first: typeof item.answer_first === 'string' ? item.answer_first : JSON.stringify(item.answer_first),
-        answer_full: typeof item.answer_full === 'string' ? item.answer_full : JSON.stringify(item.answer_full)
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        answer_first: item.answer_first || '',
+        answer_full: item.answer_full || ''
       }))
 
       setCorrections(processedData)

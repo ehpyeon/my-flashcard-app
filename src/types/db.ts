@@ -30,4 +30,9 @@ export interface Correction {
 export interface CorrectionWithAnswers extends Correction {
   answer_first?: string
   answer_full?: string
+  situations?: {
+    id: string
+    title: string
+    type: string
+  } | null
 } 

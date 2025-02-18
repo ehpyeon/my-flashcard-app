@@ -27,6 +27,12 @@ interface GenerationProps {
   onAnalysisComplete: (results: AnalysisResult[]) => void;
 }
 
+// 음성 인식 결과 타입 추가
+interface TranscriptResult {
+  text: string;
+  isFinal: boolean;
+}
+
 export default function Generation({ onAnalysisComplete }: GenerationProps) {
   const { isAuthenticated, loading: authLoading } = useAuth()
   const [isRecording, setIsRecording] = useState(false)
