@@ -8,10 +8,17 @@ import { Button } from '@/components/ui/Button'
 import { Correction } from '@/types/db'
 import { useRouter } from 'next/navigation'
 
+interface Situation {
+  id: string;
+  title: string;
+  type: string;
+}
+
 // Correction 타입 확장
 interface CorrectionWithAnswers extends Correction {
   answer_first?: string;
   answer_full?: string;
+  situations?: Situation;
 }
 
 interface SupabaseResponse {
@@ -77,7 +84,6 @@ export function FlashcardContainer() {
         return
       }
 
-      // 데이터 처리 로직 수정
       const processedData: CorrectionWithAnswers[] = data.map(item => ({
         id: item.id,
         situation_id: item.situations?.id ?? '',
@@ -97,10 +103,9 @@ export function FlashcardContainer() {
         answer_full: typeof item.answer_full === 'string' ? item.answer_full : JSON.stringify(item.answer_full)
       }))
 
-      console.log('Processed data:', processedData) // 디버깅용
       setCorrections(processedData)
     } catch (err) {
-      console.error('Detailed error in loadCorrections:', err)
+      console.error('Error loading corrections:', err)
       setError(err as Error)
     } finally {
       setLoading(false)
