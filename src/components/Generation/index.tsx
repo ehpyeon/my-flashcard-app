@@ -14,7 +14,7 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 
-interface AnalysisResult {
+export interface AnalysisResult {
   title: string;
   before_versa_after_sentence: string;
   before_sentence: string;
