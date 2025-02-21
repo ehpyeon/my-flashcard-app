@@ -32,7 +32,11 @@ interface SupabaseResponse {
   score: number;
   answer_first?: string;
   answer_full?: string;
-  situations: Situation | null;
+  situations: {
+    id: string;
+    title: string;
+    type: string;
+  } | null;
 }
 
 export function FlashcardContainer() {
@@ -80,7 +84,10 @@ export function FlashcardContainer() {
         return
       }
 
-      const processedData: CorrectionWithAnswers[] = data.map(item => ({
+      // 타입 단언을 사용하여 데이터 타입 명시
+      const supabaseData = data as SupabaseResponse[]
+
+      const processedData: CorrectionWithAnswers[] = supabaseData.map(item => ({
         id: item.id,
         situation_id: item.situations?.id ?? '',
         title: item.title,
@@ -96,7 +103,8 @@ export function FlashcardContainer() {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         answer_first: item.answer_first || '',
-        answer_full: item.answer_full || ''
+        answer_full: item.answer_full || '',
+        situations: item.situations
       }))
 
       setCorrections(processedData)

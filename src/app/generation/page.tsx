@@ -101,11 +101,10 @@ export default function GenerationPage() {
           </Button>
         </div>
 
-        <h1 className="text-2xl font-light text-white/90 mb-12 text-center">SPEAK ENGLISH</h1>
+        {/* <h1 className="text-2xl font-light text-white/90 mb-12 text-center">SPEAK ENGLISH</h1> */}
         
         <Generation onAnalysisComplete={handleAnalysisComplete} />
-
-        {/* 분석 결과 카드 */}
+        {/* 분석 결과 카드 
         {analysisResults.length > 0 && (
           <div className="mt-12 max-w-3xl mx-auto">
             <div className="flex justify-between items-center mb-8">
@@ -113,7 +112,7 @@ export default function GenerationPage() {
                 분석 결과 ({currentIndex + 1}/{analysisResults.length})
               </h2>
               <div className="flex items-center gap-3">
-                {/* 네비게이션 버튼 */}
+                
                 <Button
                   onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
                   disabled={currentIndex === 0}
@@ -139,7 +138,7 @@ export default function GenerationPage() {
               </div>
             </div>
 
-            {/* 현재 카드 내용 */}
+            
             <Box className="p-8 rounded-lg bg-neutral-900/50 border border-white/10 backdrop-blur-sm
               shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
               <h3 className="text-lg font-medium text-white/90 mb-6">{analysisResults[currentIndex].title}</h3>
@@ -165,9 +164,9 @@ export default function GenerationPage() {
               </div>
             </Box>
 
-            {/* 저장 버튼 영역 */}
+            
             <div className="mt-8 flex justify-center gap-4">
-              {/* 단일 카드 저장 버튼 */}
+              
               <Button
                 onClick={() => handleSaveCard(currentIndex)}
                 disabled={savedIndices.has(currentIndex)}
@@ -180,7 +179,7 @@ export default function GenerationPage() {
                 {savedIndices.has(currentIndex) ? '저장됨' : '현재 카드 저장'}
               </Button>
 
-              {/* 전체 저장 버튼 */}
+              
               <Button
                 onClick={handleSaveAll}
                 disabled={savedIndices.size === analysisResults.length}
@@ -196,7 +195,8 @@ export default function GenerationPage() {
               </Button>
             </div>
           </div>
-        )}
+        )} 
+        */}
       </div>
     </Box>
   )

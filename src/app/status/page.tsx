@@ -1,3 +1,4 @@
+/*
 'use client'
 
 import { Box } from '@/components/ui/Box'
@@ -19,4 +20,5 @@ export default function StatusPage() {
       <Generation onAnalysisComplete={handleAnalysisComplete} />
     </Box>
   )
-} 
+}
+*/ 

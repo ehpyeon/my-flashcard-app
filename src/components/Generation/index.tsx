@@ -13,15 +13,7 @@ import { parseGptResponse } from '@/lib/utils/parseGptResponse'
 import { useAuth } from '@/lib/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
-
-export interface AnalysisResult {
-  title: string;
-  before_versa_after_sentence: string;
-  before_sentence: string;
-  before_intent: string;
-  after_sentence: string;
-  after_detail: string;
-}
+import { AnalysisResult } from '@/types/generation'
 
 interface GenerationProps {
   onAnalysisComplete: (results: AnalysisResult[]) => void;
@@ -36,7 +28,7 @@ interface TranscriptResult {
 export default function Generation({ onAnalysisComplete }: GenerationProps) {
   const { isAuthenticated, loading: authLoading } = useAuth()
   const [isRecording, setIsRecording] = useState(false)
-  const [whisperResult, setWhisperResult] = useState('')
+  const [whisperResult, setWhisperResult] = useState<string>('')
   const [analysisResult, setAnalysisResult] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -49,7 +41,7 @@ export default function Generation({ onAnalysisComplete }: GenerationProps) {
   const router = useRouter()
 
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [analysisCards, setAnalysisCards] = useState<ParsedSentence[]>([])
+  const [analysisCards, setAnalysisCards] = useState<AnalysisResult[]>([])
   const [savedCardIndices, setSavedCardIndices] = useState<Set<number>>(new Set())
 
   // 녹음 상태 텍스트를 위한 상태 추가
@@ -136,7 +128,7 @@ export default function Generation({ onAnalysisComplete }: GenerationProps) {
           .filter(Boolean) // null 값 제거
 
         console.log('Parsed cards:', validCards)
-        setAnalysisCards(validCards)
+        setAnalysisCards(validCards as AnalysisResult[])
       } catch (e) {
         console.error('전처리 에러:', e)
         console.error('원본 문자열:', analysisResult)
@@ -209,10 +201,7 @@ export default function Generation({ onAnalysisComplete }: GenerationProps) {
     if (!whisperResult) return
     
     setIsAnalyzing(true)
-    setAnalysisResult('')  // 결과 초기화
-
     try {
-      console.log('Sending analysis request with prompt:', whisperResult)
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -225,30 +214,18 @@ export default function Generation({ onAnalysisComplete }: GenerationProps) {
         throw new Error('분석 요청 실패')
       }
 
-      const responseText = await response.text()
-      console.log('Raw response text:', responseText)
+      const data = await response.json()
+      console.log('API Response:', data) // 디버깅용
 
-      try {
-        // 응답이 이미 JSON 문자열인 경우를 처리
-        let results
-        if (responseText.startsWith('[') && responseText.endsWith(']')) {
-          // 응답이 이미 JSON 배열 형태인 경우
-          results = JSON.parse(responseText)
-        } else {
-          // 응답이 다른 형태인 경우 (예: {content: "..."})
-          const data = JSON.parse(responseText)
-          results = typeof data.content === 'string' 
-            ? JSON.parse(data.content)
-            : data.content
-        }
-
-        console.log('Parsed results:', results)
-        onAnalysisComplete(results)
-        
-      } catch (parseError) {
-        console.error('JSON Parse error:', parseError)
-        alert('응답 데이터 처리에 실패했습니다.')
+      // 응답 데이터 구조 확인 및 처리
+      const results = Array.isArray(data) ? data : data.results || data.content
+      
+      if (!results) {
+        throw new Error('유효하지 않은 응답 데이터')
       }
+
+      onAnalysisComplete(results)
+      setAnalysisResult(JSON.stringify(results, null, 2))
 
     } catch (error) {
       console.error('Analysis error:', error)

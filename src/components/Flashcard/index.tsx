@@ -99,7 +99,6 @@ export default function Flashcard({
           absolute w-full h-full bg-white 
           border border-neutral-200 rounded-lg p-8 
           flex items-center justify-center
-          transition-opacity duration-300
           shadow-[0_8px_30px_rgb(0,0,0,0.12)]
           ${isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'}
         `}>
@@ -159,7 +158,6 @@ export default function Flashcard({
           absolute w-full h-full bg-white 
           border border-neutral-200 rounded-lg p-8 
           flex items-center justify-center
-          transition-opacity duration-300
           shadow-[0_8px_30px_rgb(0,0,0,0.12)]
           ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}
         `}>
@@ -179,7 +177,7 @@ export default function Flashcard({
                       {parts.map((part, i) => {
                         if (part.startsWith('%%') && part.endsWith('%%')) {
                           const content = part.slice(2, -2)
-                          return <span key={i} className="text-red-500">{content}</span>
+                          return <span key={i} style={{ color: 'red' }}>{content}</span>
                         }
                         return part
                       })}

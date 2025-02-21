@@ -19,6 +19,9 @@ module.exports = {
       perspective: {
         '1000': '1000px',
       },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [],
